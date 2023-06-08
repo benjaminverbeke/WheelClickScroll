@@ -1,14 +1,14 @@
 import Cocoa
 
 class MouseClickService: NSObject {
-    let minimalPixelDistanceDelta: CGFloat = 15
-    let minScrollFrequency: CGFloat = 4
-    let maxScrollFrequency: CGFloat = 0.5
+    let minimalPixelDistanceDelta: CGFloat = 5
+    let minScrollFrequency: CGFloat = 150
+    let maxScrollFrequency: CGFloat = 30
 
     // The bigger the factor the quicker you reach max speed
     let maxPixelDistanceFactor: CGFloat = 5
 
-    var scrollFrequency: CGFloat = 4
+    var scrollFrequency: CGFloat
     
     var _scrollModeEnabled:Bool = false
     var scrollModeEnabled:Bool {
@@ -25,6 +25,10 @@ class MouseClickService: NSObject {
     var currentMouseY: CGFloat = 0.0
     var currentScreenHeight: CGFloat? = 0.0
     var isScrollInverted = UserDefaults.standard.bool(forKey: "com.apple.swipescrolldirection") ? true : false
+    
+    override init() {
+        scrollFrequency = minScrollFrequency
+    }
     
     func startMonitoring() {
         NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown, .otherMouseDown, .otherMouseUp, .mouseMoved]) { event in
