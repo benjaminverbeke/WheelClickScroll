@@ -7,15 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		47F7BDC12A32654E008E3EDB /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 47F7BDC02A32654E008E3EDB /* Info.plist */; };
-		47F7BDC32A32671F008E3EDB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F7BDC22A32671F008E3EDB /* main.swift */; };
+		4736AA602A33A2FB008CEC8A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4736AA5F2A33A2FB008CEC8A /* main.swift */; };
+		4736AA622A33B2E5008CEC8A /* backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4736AA612A33B2E5008CEC8A /* backup.swift */; };
+		47F7BDC32A32671F008E3EDB /* MouseClickService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F7BDC22A32671F008E3EDB /* MouseClickService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4736AA5F2A33A2FB008CEC8A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		4736AA612A33B2E5008CEC8A /* backup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = backup.swift; sourceTree = "<group>"; };
 		47F7BDAA2A32605F008E3EDB /* WheelClickScroll.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WheelClickScroll.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47F7BDB62A326060008E3EDB /* WheelClickScroll.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WheelClickScroll.entitlements; sourceTree = "<group>"; };
 		47F7BDC02A32654E008E3EDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		47F7BDC22A32671F008E3EDB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		47F7BDC22A32671F008E3EDB /* MouseClickService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseClickService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,9 +51,11 @@
 		47F7BDAC2A32605F008E3EDB /* WheelClickScroll */ = {
 			isa = PBXGroup;
 			children = (
-				47F7BDC22A32671F008E3EDB /* main.swift */,
+				47F7BDC22A32671F008E3EDB /* MouseClickService.swift */,
 				47F7BDB62A326060008E3EDB /* WheelClickScroll.entitlements */,
 				47F7BDC02A32654E008E3EDB /* Info.plist */,
+				4736AA5F2A33A2FB008CEC8A /* main.swift */,
+				4736AA612A33B2E5008CEC8A /* backup.swift */,
 			);
 			path = WheelClickScroll;
 			sourceTree = "<group>";
@@ -114,7 +119,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				47F7BDC12A32654E008E3EDB /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,7 +129,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				47F7BDC32A32671F008E3EDB /* main.swift in Sources */,
+				4736AA602A33A2FB008CEC8A /* main.swift in Sources */,
+				4736AA622A33B2E5008CEC8A /* backup.swift in Sources */,
+				47F7BDC32A32671F008E3EDB /* MouseClickService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,114 +1,189 @@
 import Cocoa
 
-class MouseClickService: NSObject {
-    let minimalPixelDistanceDelta: CGFloat = 5
-    let minScrollFrequency: CGFloat = 150
-    let maxScrollFrequency: CGFloat = 30
-
-    // The bigger the factor the quicker you reach max speed
-    let maxPixelDistanceFactor: CGFloat = 5
-
-    var scrollFrequency: CGFloat
+class AppDelegate: NSObject, NSApplicationDelegate {
+    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    var preferencesWindow: NSWindow?
     
-    var _scrollModeEnabled:Bool = false
-    var scrollModeEnabled:Bool {
-        get{
-            return self._scrollModeEnabled
-        }
-        set(newValue){
-            self._scrollModeEnabled = newValue
-            self.log(message: "Scroll Mode: \(self.scrollModeEnabled ? "Enabled" : "Disabled")")
+    let defaultMaxScrollDelay: Double = 150
+    let defaultMinScrollDelay: Double = 30
+    
+    var maxScrollDelay: Double = 0.01 {
+        didSet {
+            UserDefaults.standard.set(maxScrollDelay, forKey: "MaxScrollDelay")
+            mouseClickService?.maxScrollDelay = maxScrollDelay
         }
     }
     
-    var initialMouseY: CGFloat = 0.0
-    var currentMouseY: CGFloat = 0.0
-    var currentScreenHeight: CGFloat? = 0.0
-    var isScrollInverted = UserDefaults.standard.bool(forKey: "com.apple.swipescrolldirection") ? true : false
-    
-    override init() {
-        scrollFrequency = minScrollFrequency
+    var minScrollDelay: Double = 0.01 {
+        didSet {
+            UserDefaults.standard.set(minScrollDelay, forKey: "MinScrollDelay")
+            mouseClickService?.minScrollDelay = minScrollDelay
+        }
     }
     
-    func startMonitoring() {
-        NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown, .otherMouseDown, .otherMouseUp, .mouseMoved]) { event in
-            if event.type == .otherMouseDown {
-                if event.buttonNumber == 2 {
-                    // Toggle "scrollMode" on or off
-                    self.scrollModeEnabled.toggle()
-
-                    if self.scrollModeEnabled {
-                        self.initialMouseY = event.locationInWindow.y
-                        self.currentMouseY = event.locationInWindow.y
-                        self.currentScreenHeight = NSScreen.main?.frame.height
-                        self.isScrollInverted = UserDefaults.standard.bool(forKey: "com.apple.swipescrolldirection") ? true : false
-                        self.startMoveMonitoring()
-                    }
-                }
+    var maxDelayTextField: NSTextField!
+    var minDelayTextField: NSTextField!
+    var maxDelaySlider: NSSlider!
+    var minDelaySlider: NSSlider!
+    
+    var mouseClickService: MouseClickService? = nil
+    
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // Load values from UserDefaults
+        let savedMaxDelay = UserDefaults.standard.object(forKey: "MaxScrollDelay") as? Double
+        let savedMinDelay = UserDefaults.standard.object(forKey: "MinScrollDelay") as? Double
+        if savedMaxDelay != nil && savedMaxDelay != 0 {
+            maxScrollDelay = savedMaxDelay!
+        } else {
+            maxScrollDelay = defaultMaxScrollDelay
+        }
+        
+        if savedMinDelay != nil && savedMinDelay != 0 {
+            minScrollDelay = savedMinDelay!
+        } else {
+            minScrollDelay = defaultMinScrollDelay
+        }
+        
+        mouseClickService = MouseClickService(minDelay: minScrollDelay, maxDelay: maxScrollDelay)
+        mouseClickService!.startMonitoring()
+        
+        if let button = statusItem.button {
+            let myAttribute = [ NSAttributedString.Key.font: NSFont(name: "Arial", size: 15)]
+            let myAttrString = NSAttributedString(string: String(format: "%C", 0x2195), attributes: myAttribute as [NSAttributedString.Key : Any])
+            button.attributedTitle = myAttrString
+            button.action = #selector(togglePopover(_:))
+        }
+        
+        let menu = NSMenu()
+        menu.addItem(NSMenuItem(title: "Preferences", action: #selector(showPreferences(_:)), keyEquivalent: ""))
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        statusItem.menu = menu
+    }
+    
+    @objc func togglePopover(_ sender: AnyObject?) {
+        // Implement your popover behavior here
+        // For example, display a custom view or perform an action
+    }
+    
+    @objc func showPreferences(_ sender: AnyObject?) {
+        if preferencesWindow == nil {
+            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 470, height: 200), styleMask: [.titled, .closable], backing: .buffered, defer: false)
+            window.center()
+            window.title = "Preferences"
+            window.isReleasedWhenClosed = false
+            
+            let contentView = NSView(frame: window.contentRect(forFrameRect: window.frame))
+            
+            let maxDelayLabel = NSTextField(labelWithString: "Max. scroll delay:")
+            maxDelayLabel.frame = NSRect(x: 20, y: 145, width: 150, height: 20)
+            contentView.addSubview(maxDelayLabel)
+            
+            maxDelaySlider = NSSlider(value: maxScrollDelay, minValue: 0.01, maxValue: 300.0, target: self, action: #selector(maxDelaySliderChanged(_:)))
+            maxDelaySlider.frame = NSRect(x: 180, y: 140, width: 200, height: 25)
+            maxDelaySlider.isContinuous = true
+            contentView.addSubview(maxDelaySlider)
+            
+            let minDelayLabel = NSTextField(labelWithString: "Min. scroll delay:")
+            minDelayLabel.frame = NSRect(x: 20, y: 105, width: 150, height: 20)
+            contentView.addSubview(minDelayLabel)
+            
+            minDelaySlider = NSSlider(value: minScrollDelay, minValue: 0.01, maxValue: 300.0, target: self, action: #selector(minDelaySliderChanged(_:)))
+            minDelaySlider.frame = NSRect(x: 180, y: 100, width: 200, height: 25)
+            minDelaySlider.isContinuous = true
+            contentView.addSubview(minDelaySlider)
+            
+            maxDelayTextField = NSTextField(frame: NSRect(x: 400, y: 145, width: 50, height: 20))
+            maxDelayTextField.stringValue = String(format: "%.2f", maxScrollDelay)
+            maxDelayTextField.alignment = .center
+            maxDelayTextField.delegate = self
+            contentView.addSubview(maxDelayTextField)
+            
+            minDelayTextField = NSTextField(frame: NSRect(x: 400, y: 105, width: 50, height: 20))
+            minDelayTextField.stringValue = String(format: "%.2f", minScrollDelay)
+            minDelayTextField.alignment = .center
+            minDelayTextField.delegate = self
+            contentView.addSubview(minDelayTextField)
+            
+            window.contentView = contentView
+            preferencesWindow = window
+            preferencesWindow?.level = .floating
+        }
+        
+        preferencesWindow?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+    
+    @objc func maxDelaySliderChanged(_ sender: NSSlider) {
+        maxScrollDelay = sender.doubleValue
+        if maxScrollDelay < minScrollDelay {
+            maxScrollDelay = minScrollDelay
+        }
+        sender.doubleValue = maxScrollDelay
+        updateMaxDelayTextField()
+    }
+    
+    @objc func minDelaySliderChanged(_ sender: NSSlider) {
+        minScrollDelay = sender.doubleValue
+        if minScrollDelay > maxScrollDelay {
+            minScrollDelay = maxScrollDelay
+        }
+        sender.doubleValue = minScrollDelay
+        updateMinDelayTextField()
+    }
+    
+    func updateMaxDelayTextField() {
+        maxDelayTextField.stringValue = String(format: "%.2f", maxScrollDelay)
+    }
+    
+    func updateMinDelayTextField() {
+        minDelayTextField.stringValue = String(format: "%.2f", minScrollDelay)
+    }
+    
+    @objc func maxDelayTextFieldChanged(_ sender: NSTextField) {
+        if let value = Double(sender.stringValue) {
+            maxScrollDelay = value
+            if maxScrollDelay < minScrollDelay {
+                maxScrollDelay = minScrollDelay
+                sender.stringValue = String(format: "%.2f", maxScrollDelay)
             }
-
-            if (!self.scrollModeEnabled) {
-                return
-            }
-
-            if event.type == .mouseMoved {
-                self.currentMouseY = event.locationInWindow.y
-            } else if event.type == .leftMouseDown || event.type == .rightMouseDown {
-                self.scrollModeEnabled = false
-            }
+            maxDelaySlider.doubleValue = maxScrollDelay
+        } else {
+            sender.stringValue = String(format: "%.2f", maxScrollDelay)
         }
     }
-
-    func startMoveMonitoring() {
-        DispatchQueue.global(qos: .userInitiated).async {
-            while (self.scrollModeEnabled) {
-                let deltaY = self.currentMouseY - self.initialMouseY
-
-                if abs(deltaY) > self.minimalPixelDistanceDelta {
-                    self.scrollPage(deltaY: deltaY)
-                }
-
-                usleep(UInt32(self.scrollFrequency * 1000))
+    
+    @objc func minDelayTextFieldChanged(_ sender: NSTextField) {
+        if let value = Double(sender.stringValue) {
+            minScrollDelay = value
+            if minScrollDelay > maxScrollDelay {
+                minScrollDelay = maxScrollDelay
+                sender.stringValue = String(format: "%.2f", minScrollDelay)
             }
+            self.minDelaySlider.doubleValue = minScrollDelay
+        } else {
+            sender.stringValue = String(format: "%.2f", minScrollDelay)
         }
-    }
-
-    func updateScrollTimerInterval(deltaY: CGFloat) {
-        if (self.currentScreenHeight == nil) {
-            return
-        }
-        let maxPixelDistance = self.currentScreenHeight! / self.maxPixelDistanceFactor
-        var pixelRatio: CGFloat = abs(deltaY) / maxPixelDistance
-        if (pixelRatio > 1) {
-            pixelRatio = 1
-        }
-
-        self.scrollFrequency = minScrollFrequency - (minScrollFrequency - maxScrollFrequency) * pixelRatio
-    }
-
-    func scrollPage(deltaY: CGFloat) {
-        var isUp = deltaY > 0
-
-        if isScrollInverted {
-            isUp = !isUp
-        }
-
-        let scrollEvent = CGEvent(scrollWheelEvent2Source: nil, units: .pixel, wheelCount: 1, wheel1: (isUp ? 1 : -1), wheel2: 0, wheel3: 0)
-        //let scrollEvent = CGEvent(scrollWheelEvent2Source: nil, units: .pixel, wheelCount: 1, wheel1: Int32(deltaY), wheel2: 0, wheel3: 0)
-        log(message: "Scrolling \(deltaY > 0 ? "Up" : "Down") by 1 pixel at \(scrollFrequency) scroll/s - deltaY = \(deltaY)")
-        scrollEvent?.post(tap: .cghidEventTap)
-        updateScrollTimerInterval(deltaY: deltaY)
-    }
-
-    func log(message: String) {
-#if DEBUG
-        print(message)
-#endif
     }
 }
 
-let mouseClickService = MouseClickService()
-mouseClickService.startMonitoring()
+extension AppDelegate: NSTextFieldDelegate {
+    func controlTextDidChange(_ obj: Notification) {
+        guard let textField = obj.object as? NSTextField else {
+            return
+        }
+        
+        if textField === maxDelayTextField {
+            maxDelayTextFieldChanged(textField)
+        } else if textField === minDelayTextField {
+            minDelayTextFieldChanged(textField)
+        }
+    }
+}
 
-// Prevent the application from quitting immediately
-NSApplication.shared.run()
+let app = NSApplication.shared
+
+let delegate = AppDelegate()
+app.delegate = delegate
+
+app.run()
