@@ -7,8 +7,7 @@ class Configuration {
     let defaultMinScrollDelay: Double = 0.15
     let defaultDeadZoneRadius: Double = 20
     let defaultMaxDistancePercent: Double = 20
-    
-    var isScrollInverted: Bool = UserDefaults.standard.bool(forKey: "com.apple.swipescrolldirection") ? true : false
+    let defaultReverseScrolling: Bool = false
     
     var maxDistancePercent: Double {
         didSet {
@@ -34,12 +33,19 @@ class Configuration {
         }
     }
     
+    var reverseScrolling: Bool {
+        didSet {
+            UserDefaults.standard.set(reverseScrolling, forKey: "ReverseScrolling")
+        }
+    }
+    
     private init() {
         // Load values from UserDefaults
         let savedMaxDelay = UserDefaults.standard.object(forKey: "MaxScrollDelay") as? Double
         let savedMinDelay = UserDefaults.standard.object(forKey: "MinScrollDelay") as? Double
         let savedDeadZoneRadius = UserDefaults.standard.object(forKey: "DeadZoneRadius") as? Double
         let savedMaxDistancePercent = UserDefaults.standard.object(forKey: "MaxSpeedDistance") as? Double
+        let savedReverseScrolling = UserDefaults.standard.object(forKey: "ReverseScrolling")
         
         if savedMaxDelay != nil && savedMaxDelay != 0 {
             maxScrollDelay = savedMaxDelay!
@@ -63,6 +69,12 @@ class Configuration {
             maxDistancePercent = savedMaxDistancePercent!
         } else {
             maxDistancePercent = defaultMaxDistancePercent
+        }
+        
+        if savedReverseScrolling != nil {
+            reverseScrolling = savedReverseScrolling as! Bool
+        } else {
+            reverseScrolling = defaultReverseScrolling
         }
     }
 }

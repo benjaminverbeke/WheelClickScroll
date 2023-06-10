@@ -19,7 +19,6 @@ class MouseClickService: NSObject {
     var initialMouseY: CGFloat = 0.0
     var currentMouseY: CGFloat = 0.0
     var currentScreenHeight: CGFloat? = 0.0
-    var isScrollInverted = UserDefaults.standard.bool(forKey: "com.apple.swipescrolldirection") ? true : false
     
     override init() {
         scrollDelay = configuration.minScrollDelay
@@ -36,7 +35,6 @@ class MouseClickService: NSObject {
                         self.initialMouseY = event.locationInWindow.y
                         self.currentMouseY = event.locationInWindow.y
                         self.currentScreenHeight = NSScreen.main?.frame.height
-                        self.isScrollInverted = UserDefaults.standard.bool(forKey: "com.apple.swipescrolldirection") ? true : false
                         self.startMoveMonitoring()
                     }
                 }
@@ -84,7 +82,7 @@ class MouseClickService: NSObject {
     func scrollPage(deltaY: CGFloat) {
         var isUp = deltaY > 0
 
-        if isScrollInverted {
+        if self.configuration.reverseScrolling {
             isUp = !isUp
         }
 

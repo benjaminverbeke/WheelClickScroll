@@ -15,7 +15,7 @@ class Menu : NSObject {
     var minDelaySlider: NSSlider!
     var deadZoneRadiusSlider: NSSlider!
     var maxDistancePercentSlider: NSSlider!
-    var invertScrollCheckBox: NSButton!
+    var reverseScrollingCheckBox: NSButton!
     
     override init() {
         super.init()
@@ -109,6 +109,12 @@ class Menu : NSObject {
             maxDistancePercentTextField.delegate = self
             contentView.addSubview(maxDistancePercentTextField)
             
+            reverseScrollingCheckBox = NSButton(title: "Reverse scrolling", target: self, action: #selector(revertScrollingCheckBoxChanged(_:)))
+            reverseScrollingCheckBox.state = self.configuration.reverseScrolling ? NSControl.StateValue.on : NSControl.StateValue.off
+            reverseScrollingCheckBox.setButtonType(NSButton.ButtonType.switch)
+            reverseScrollingCheckBox.frame = NSRect(x: 20, y: 65, width: 150, height: 20)
+            contentView.addSubview(reverseScrollingCheckBox)
+            
             window.contentView = contentView
             preferencesWindow = window
             preferencesWindow?.level = .floating
@@ -140,6 +146,10 @@ class Menu : NSObject {
     @objc func maxDeadZoneRadiusSliderChanged(_ sender: NSSlider) {
         self.configuration.deadZoneRadius = sender.doubleValue
         updateDeadZoneTextField()
+    }
+    
+    @objc func revertScrollingCheckBoxChanged(_ sender: NSButton) {
+        self.configuration.reverseScrolling = reverseScrollingCheckBox.state == NSControl.StateValue.on
     }
     
     @objc func maxDistancePercentSliderChanged(_ sender: NSSlider) {
