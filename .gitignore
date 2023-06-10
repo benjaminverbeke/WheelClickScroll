@@ -1,4 +1,4 @@
 .DS_Store
-WheelClickScroll.xcodeproj/xcshareddata/**
-WheelClickScroll.xcodeproj/xcuserdata/**
+WheelClickScroll.xcodeproj/project.xcworkspace/xcuserdata/*
+WheelClickScroll.xcodeproj/xcshareddata/
 build
