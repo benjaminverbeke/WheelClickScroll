@@ -9,12 +9,14 @@
 /* Begin PBXBuildFile section */
 		4736AA602A33A2FB008CEC8A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4736AA5F2A33A2FB008CEC8A /* main.swift */; };
 		47C9C95C2A346597008F48E0 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C9C95B2A346597008F48E0 /* Configuration.swift */; };
+		47C9C95E2A347D94008F48E0 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C9C95D2A347D94008F48E0 /* Menu.swift */; };
 		47F7BDC32A32671F008E3EDB /* MouseClickService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F7BDC22A32671F008E3EDB /* MouseClickService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4736AA5F2A33A2FB008CEC8A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		47C9C95B2A346597008F48E0 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		47C9C95D2A347D94008F48E0 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		47F7BDAA2A32605F008E3EDB /* WheelClickScroll.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WheelClickScroll.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47F7BDB62A326060008E3EDB /* WheelClickScroll.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WheelClickScroll.entitlements; sourceTree = "<group>"; };
 		47F7BDC02A32654E008E3EDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 				47F7BDC02A32654E008E3EDB /* Info.plist */,
 				4736AA5F2A33A2FB008CEC8A /* main.swift */,
 				47C9C95B2A346597008F48E0 /* Configuration.swift */,
+				47C9C95D2A347D94008F48E0 /* Menu.swift */,
 			);
 			path = WheelClickScroll;
 			sourceTree = "<group>";
@@ -131,6 +134,7 @@
 			files = (
 				47C9C95C2A346597008F48E0 /* Configuration.swift in Sources */,
 				4736AA602A33A2FB008CEC8A /* main.swift in Sources */,
+				47C9C95E2A347D94008F48E0 /* Menu.swift in Sources */,
 				47F7BDC32A32671F008E3EDB /* MouseClickService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

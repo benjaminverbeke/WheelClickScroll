@@ -1,13 +1,15 @@
 import Cocoa
 
 class Configuration {
-    
     static let shared: Configuration = Configuration()
     
-    let defaultMaxScrollDelay: Double = 150
-    let defaultMinScrollDelay: Double = 30
+    let defaultMaxScrollDelay: Double = 4
+    let defaultMinScrollDelay: Double = 0.15
     
-    var minimalPixelDistanceDelta: CGFloat = 5
+    // The bigger the factor the quicker you reach max speed
+    let maxPixelDistanceFactor: CGFloat = 5
+    
+    var deadZoneRadius: CGFloat = 5
     var isScrollInverted: Bool = UserDefaults.standard.bool(forKey: "com.apple.swipescrolldirection") ? true : false
     
     var maxScrollDelay: Double {
@@ -21,9 +23,6 @@ class Configuration {
             UserDefaults.standard.set(minScrollDelay, forKey: "MinScrollDelay")
         }
     }
-
-    // The bigger the factor the quicker you reach max speed
-    let maxPixelDistanceFactor: CGFloat = 5
     
     private init() {
         // Load values from UserDefaults

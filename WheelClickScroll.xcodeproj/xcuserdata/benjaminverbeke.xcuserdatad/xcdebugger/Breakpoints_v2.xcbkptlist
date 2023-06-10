@@ -30,10 +30,152 @@
             filePath = "WheelClickScroll/main.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
             landmarkName = "unknown"
             landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F2B9DAFB-1CF4-4AC5-AD52-CF96F413C744"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WheelClickScroll/Menu.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
+            landmarkName = "showPreferences(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F2B9DAFB-1CF4-4AC5-AD52-CF96F413C744 - a47b2e102c9cc4fa"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WheelClickScroll.Menu.showPreferences(Swift.Optional&lt;Swift.AnyObject&gt;) -&gt; ()"
+                  moduleName = "WheelClickScroll"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/benjaminverbeke/Projects/WheelClickScroll/WheelClickScroll/Menu.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "79"
+                  endingLineNumber = "79"
+                  offsetFromSymbolStart = "5524">
+               </Location>
+               <Location
+                  uuid = "F2B9DAFB-1CF4-4AC5-AD52-CF96F413C744 - a47b2e102c9cc4db"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WheelClickScroll.Menu.showPreferences(Swift.Optional&lt;Swift.AnyObject&gt;) -&gt; ()"
+                  moduleName = "WheelClickScroll"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/benjaminverbeke/Projects/WheelClickScroll/WheelClickScroll/Menu.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "80"
+                  endingLineNumber = "80"
+                  offsetFromSymbolStart = "5528">
+               </Location>
+               <Location
+                  uuid = "F2B9DAFB-1CF4-4AC5-AD52-CF96F413C744 - a47b2e102c9cc4db"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WheelClickScroll.Menu.showPreferences(Swift.Optional&lt;Swift.AnyObject&gt;) -&gt; ()"
+                  moduleName = "WheelClickScroll"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/benjaminverbeke/Projects/WheelClickScroll/WheelClickScroll/Menu.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "80"
+                  endingLineNumber = "80"
+                  offsetFromSymbolStart = "5072">
+               </Location>
+               <Location
+                  uuid = "F2B9DAFB-1CF4-4AC5-AD52-CF96F413C744 - a47b2e102c9cc499"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WheelClickScroll.Menu.showPreferences(Swift.Optional&lt;Swift.AnyObject&gt;) -&gt; ()"
+                  moduleName = "WheelClickScroll"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/benjaminverbeke/Projects/WheelClickScroll/WheelClickScroll/Menu.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "82"
+                  endingLineNumber = "82"
+                  offsetFromSymbolStart = "5524">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DCBE3A14-0A04-4A72-9F7B-8277F0309FB4"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WheelClickScroll/Menu.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "init()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E644C9F0-6B7B-4479-A2BB-A484204A0D33"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WheelClickScroll/Menu.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "init()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "E644C9F0-6B7B-4479-A2BB-A484204A0D33 - 9884e8f104fccd1f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WheelClickScroll.Menu.init() -&gt; WheelClickScroll.Menu"
+                  moduleName = "WheelClickScroll"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/benjaminverbeke/Projects/WheelClickScroll/WheelClickScroll/Menu.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "27"
+                  endingLineNumber = "27"
+                  offsetFromSymbolStart = "1564">
+               </Location>
+               <Location
+                  uuid = "E644C9F0-6B7B-4479-A2BB-A484204A0D33 - 9884e8f104fccddd"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WheelClickScroll.Menu.init() -&gt; WheelClickScroll.Menu"
+                  moduleName = "WheelClickScroll"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/benjaminverbeke/Projects/WheelClickScroll/WheelClickScroll/Menu.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
+                  offsetFromSymbolStart = "1604">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

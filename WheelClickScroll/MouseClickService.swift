@@ -59,7 +59,7 @@ class MouseClickService: NSObject {
             while (self.scrollModeEnabled) {
                 let deltaY = self.currentMouseY - self.initialMouseY
 
-                if abs(deltaY) > self.configuration.minimalPixelDistanceDelta {
+                if abs(deltaY) > self.configuration.deadZoneRadius {
                     self.scrollPage(deltaY: deltaY)
                 }
 
