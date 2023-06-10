@@ -50,7 +50,7 @@ If you encounter any issues or have trouble using WheelClickScroll, please try t
 
 1. Ensure that WheelClickScroll has the necessary Accessibility permissions granted in the macOS System Settings.
 2. Check for updates to WheelClickScroll and install the latest version if available.
-3. If the issue persists, you can report it on the [GitHub Issues](https://github.com/your-username/scroll-emulator/issues) page of the repository.
+3. If the issue persists, you can report it on the [GitHub Issues](https://github.com/benjaminverbeke/WheelClickScroll/issues) page of the repository.
 
 ## License
 
