@@ -1,12 +1,7 @@
 import Cocoa
 
 class MouseClickService: NSObject {
-    let minimalPixelDistanceDelta: CGFloat = 5
-    var maxScrollDelay: CGFloat = 150
-    var minScrollDelay: CGFloat = 30
-
-    // The bigger the factor the quicker you reach max speed
-    let maxPixelDistanceFactor: CGFloat = 5
+    let configuration = Configuration.shared
 
     var scrollDelay: CGFloat
     
@@ -26,10 +21,8 @@ class MouseClickService: NSObject {
     var currentScreenHeight: CGFloat? = 0.0
     var isScrollInverted = UserDefaults.standard.bool(forKey: "com.apple.swipescrolldirection") ? true : false
     
-    init(minDelay: Double, maxDelay: Double) {
-        minScrollDelay = minDelay
-        maxScrollDelay = maxDelay
-        scrollDelay = minScrollDelay
+    override init() {
+        scrollDelay = configuration.minScrollDelay
     }
     
     func startMonitoring() {
@@ -66,7 +59,7 @@ class MouseClickService: NSObject {
             while (self.scrollModeEnabled) {
                 let deltaY = self.currentMouseY - self.initialMouseY
 
-                if abs(deltaY) > self.minimalPixelDistanceDelta {
+                if abs(deltaY) > self.configuration.minimalPixelDistanceDelta {
                     self.scrollPage(deltaY: deltaY)
                 }
 
@@ -79,13 +72,13 @@ class MouseClickService: NSObject {
         if (self.currentScreenHeight == nil) {
             return
         }
-        let maxPixelDistance = self.currentScreenHeight! / self.maxPixelDistanceFactor
+        let maxPixelDistance = self.currentScreenHeight! / self.configuration.maxPixelDistanceFactor
         var pixelRatio: CGFloat = abs(deltaY) / maxPixelDistance
         if (pixelRatio > 1) {
             pixelRatio = 1
         }
 
-        self.scrollDelay = maxScrollDelay - (maxScrollDelay - minScrollDelay) * pixelRatio
+        self.scrollDelay = self.configuration.maxScrollDelay - (self.configuration.maxScrollDelay - self.configuration.minScrollDelay) * pixelRatio
     }
 
     func scrollPage(deltaY: CGFloat) {

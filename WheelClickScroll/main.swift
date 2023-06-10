@@ -2,24 +2,8 @@ import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    let configuration = Configuration.shared
     var preferencesWindow: NSWindow?
-    
-    let defaultMaxScrollDelay: Double = 150
-    let defaultMinScrollDelay: Double = 30
-    
-    var maxScrollDelay: Double = 0.01 {
-        didSet {
-            UserDefaults.standard.set(maxScrollDelay, forKey: "MaxScrollDelay")
-            mouseClickService?.maxScrollDelay = maxScrollDelay
-        }
-    }
-    
-    var minScrollDelay: Double = 0.01 {
-        didSet {
-            UserDefaults.standard.set(minScrollDelay, forKey: "MinScrollDelay")
-            mouseClickService?.minScrollDelay = minScrollDelay
-        }
-    }
     
     var maxDelayTextField: NSTextField!
     var minDelayTextField: NSTextField!
@@ -29,22 +13,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var mouseClickService: MouseClickService? = nil
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Load values from UserDefaults
-        let savedMaxDelay = UserDefaults.standard.object(forKey: "MaxScrollDelay") as? Double
-        let savedMinDelay = UserDefaults.standard.object(forKey: "MinScrollDelay") as? Double
-        if savedMaxDelay != nil && savedMaxDelay != 0 {
-            maxScrollDelay = savedMaxDelay!
-        } else {
-            maxScrollDelay = defaultMaxScrollDelay
-        }
         
-        if savedMinDelay != nil && savedMinDelay != 0 {
-            minScrollDelay = savedMinDelay!
-        } else {
-            minScrollDelay = defaultMinScrollDelay
-        }
-        
-        mouseClickService = MouseClickService(minDelay: minScrollDelay, maxDelay: maxScrollDelay)
+        mouseClickService = MouseClickService()
         mouseClickService!.startMonitoring()
         
         if let button = statusItem.button {
@@ -79,7 +49,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             maxDelayLabel.frame = NSRect(x: 20, y: 145, width: 150, height: 20)
             contentView.addSubview(maxDelayLabel)
             
-            maxDelaySlider = NSSlider(value: maxScrollDelay, minValue: 0.01, maxValue: 300.0, target: self, action: #selector(maxDelaySliderChanged(_:)))
+            maxDelaySlider = NSSlider(value: self.configuration.maxScrollDelay, minValue: 0.01, maxValue: 300.0, target: self, action: #selector(maxDelaySliderChanged(_:)))
             maxDelaySlider.frame = NSRect(x: 180, y: 140, width: 200, height: 25)
             maxDelaySlider.isContinuous = true
             contentView.addSubview(maxDelaySlider)
@@ -88,19 +58,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             minDelayLabel.frame = NSRect(x: 20, y: 105, width: 150, height: 20)
             contentView.addSubview(minDelayLabel)
             
-            minDelaySlider = NSSlider(value: minScrollDelay, minValue: 0.01, maxValue: 300.0, target: self, action: #selector(minDelaySliderChanged(_:)))
+            minDelaySlider = NSSlider(value: self.configuration.minScrollDelay, minValue: 0.01, maxValue: 300.0, target: self, action: #selector(minDelaySliderChanged(_:)))
             minDelaySlider.frame = NSRect(x: 180, y: 100, width: 200, height: 25)
             minDelaySlider.isContinuous = true
             contentView.addSubview(minDelaySlider)
             
             maxDelayTextField = NSTextField(frame: NSRect(x: 400, y: 145, width: 50, height: 20))
-            maxDelayTextField.stringValue = String(format: "%.2f", maxScrollDelay)
+            maxDelayTextField.stringValue = String(format: "%.2f", self.configuration.maxScrollDelay)
             maxDelayTextField.alignment = .center
             maxDelayTextField.delegate = self
             contentView.addSubview(maxDelayTextField)
             
             minDelayTextField = NSTextField(frame: NSRect(x: 400, y: 105, width: 50, height: 20))
-            minDelayTextField.stringValue = String(format: "%.2f", minScrollDelay)
+            minDelayTextField.stringValue = String(format: "%.2f", self.configuration.minScrollDelay)
             minDelayTextField.alignment = .center
             minDelayTextField.delegate = self
             contentView.addSubview(minDelayTextField)
@@ -115,54 +85,54 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc func maxDelaySliderChanged(_ sender: NSSlider) {
-        maxScrollDelay = sender.doubleValue
-        if maxScrollDelay < minScrollDelay {
-            maxScrollDelay = minScrollDelay
+        self.configuration.maxScrollDelay = sender.doubleValue
+        if self.configuration.maxScrollDelay < self.configuration.minScrollDelay {
+            self.configuration.maxScrollDelay = self.configuration.minScrollDelay
         }
-        sender.doubleValue = maxScrollDelay
+        sender.doubleValue = self.configuration.maxScrollDelay
         updateMaxDelayTextField()
     }
     
     @objc func minDelaySliderChanged(_ sender: NSSlider) {
-        minScrollDelay = sender.doubleValue
-        if minScrollDelay > maxScrollDelay {
-            minScrollDelay = maxScrollDelay
+        self.configuration.minScrollDelay = sender.doubleValue
+        if self.configuration.minScrollDelay > self.configuration.maxScrollDelay {
+            self.configuration.minScrollDelay = self.configuration.maxScrollDelay
         }
-        sender.doubleValue = minScrollDelay
+        sender.doubleValue = self.configuration.minScrollDelay
         updateMinDelayTextField()
     }
     
     func updateMaxDelayTextField() {
-        maxDelayTextField.stringValue = String(format: "%.2f", maxScrollDelay)
+        maxDelayTextField.stringValue = String(format: "%.2f", self.configuration.maxScrollDelay)
     }
     
     func updateMinDelayTextField() {
-        minDelayTextField.stringValue = String(format: "%.2f", minScrollDelay)
+        minDelayTextField.stringValue = String(format: "%.2f", self.configuration.minScrollDelay)
     }
     
     @objc func maxDelayTextFieldChanged(_ sender: NSTextField) {
         if let value = Double(sender.stringValue) {
-            maxScrollDelay = value
-            if maxScrollDelay < minScrollDelay {
-                maxScrollDelay = minScrollDelay
-                sender.stringValue = String(format: "%.2f", maxScrollDelay)
+            self.configuration.maxScrollDelay = value
+            if self.configuration.maxScrollDelay < self.configuration.minScrollDelay {
+                self.configuration.maxScrollDelay = self.configuration.minScrollDelay
+                sender.stringValue = String(format: "%.2f", self.configuration.maxScrollDelay)
             }
-            maxDelaySlider.doubleValue = maxScrollDelay
+            maxDelaySlider.doubleValue = self.configuration.maxScrollDelay
         } else {
-            sender.stringValue = String(format: "%.2f", maxScrollDelay)
+            sender.stringValue = String(format: "%.2f", self.configuration.maxScrollDelay)
         }
     }
     
     @objc func minDelayTextFieldChanged(_ sender: NSTextField) {
         if let value = Double(sender.stringValue) {
-            minScrollDelay = value
-            if minScrollDelay > maxScrollDelay {
-                minScrollDelay = maxScrollDelay
-                sender.stringValue = String(format: "%.2f", minScrollDelay)
+            self.configuration.minScrollDelay = value
+            if self.configuration.minScrollDelay > self.configuration.maxScrollDelay {
+                self.configuration.minScrollDelay = self.configuration.maxScrollDelay
+                sender.stringValue = String(format: "%.2f", self.configuration.minScrollDelay)
             }
-            self.minDelaySlider.doubleValue = minScrollDelay
+            self.minDelaySlider.doubleValue = self.configuration.minScrollDelay
         } else {
-            sender.stringValue = String(format: "%.2f", minScrollDelay)
+            sender.stringValue = String(format: "%.2f", self.configuration.minScrollDelay)
         }
     }
 }
