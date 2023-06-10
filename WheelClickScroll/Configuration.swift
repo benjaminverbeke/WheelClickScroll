@@ -6,11 +6,15 @@ class Configuration {
     let defaultMaxScrollDelay: Double = 4
     let defaultMinScrollDelay: Double = 0.15
     let defaultDeadZoneRadius: Double = 20
-    
-    // The bigger the factor the quicker you reach max speed
-    let maxPixelDistanceFactor: CGFloat = 5
+    let defaultMaxDistancePercent: Double = 20
     
     var isScrollInverted: Bool = UserDefaults.standard.bool(forKey: "com.apple.swipescrolldirection") ? true : false
+    
+    var maxDistancePercent: Double {
+        didSet {
+            UserDefaults.standard.set(maxDistancePercent, forKey: "MaxSpeedDistance")
+        }
+    }
     
     var deadZoneRadius: Double {
         didSet {
@@ -35,6 +39,7 @@ class Configuration {
         let savedMaxDelay = UserDefaults.standard.object(forKey: "MaxScrollDelay") as? Double
         let savedMinDelay = UserDefaults.standard.object(forKey: "MinScrollDelay") as? Double
         let savedDeadZoneRadius = UserDefaults.standard.object(forKey: "DeadZoneRadius") as? Double
+        let savedMaxDistancePercent = UserDefaults.standard.object(forKey: "MaxSpeedDistance") as? Double
         
         if savedMaxDelay != nil && savedMaxDelay != 0 {
             maxScrollDelay = savedMaxDelay!
@@ -52,6 +57,12 @@ class Configuration {
             deadZoneRadius = savedDeadZoneRadius!
         } else {
             deadZoneRadius = defaultDeadZoneRadius
+        }
+        
+        if savedMaxDistancePercent != nil && savedMaxDistancePercent != 0 {
+            maxDistancePercent = savedMaxDistancePercent!
+        } else {
+            maxDistancePercent = defaultMaxDistancePercent
         }
     }
 }

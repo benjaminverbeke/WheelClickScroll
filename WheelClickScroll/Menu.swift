@@ -42,7 +42,7 @@ class Menu : NSObject {
     
     @objc func showPreferences(_ sender: AnyObject?) {
         if preferencesWindow == nil {
-            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 470, height: 200), styleMask: [.titled, .closable], backing: .buffered, defer: false)
+            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 470, height: 300), styleMask: [.titled, .closable], backing: .buffered, defer: false)
             window.center()
             window.title = "Preferences"
             window.isReleasedWhenClosed = false
@@ -50,49 +50,64 @@ class Menu : NSObject {
             let contentView = NSView(frame: window.contentRect(forFrameRect: window.frame))
             
             let maxDelayLabel = NSTextField(labelWithString: "Max. scroll delay:")
-            maxDelayLabel.frame = NSRect(x: 20, y: 145, width: 150, height: 20)
+            maxDelayLabel.frame = NSRect(x: 20, y: 225, width: 150, height: 20)
             contentView.addSubview(maxDelayLabel)
             
             maxDelaySlider = NSSlider(value: self.configuration.maxScrollDelay, minValue: 0.01, maxValue: 200.0, target: self, action: #selector(maxDelaySliderChanged(_:)))
-            maxDelaySlider.frame = NSRect(x: 180, y: 140, width: 200, height: 25)
+            maxDelaySlider.frame = NSRect(x: 180, y: 220, width: 200, height: 25)
             maxDelaySlider.numberOfTickMarks = 20
             contentView.addSubview(maxDelaySlider)
             
             let minDelayLabel = NSTextField(labelWithString: "Min. scroll delay:")
-            minDelayLabel.frame = NSRect(x: 20, y: 105, width: 150, height: 20)
+            minDelayLabel.frame = NSRect(x: 20, y: 185, width: 150, height: 20)
             contentView.addSubview(minDelayLabel)
             
             minDelaySlider = NSSlider(value: self.configuration.minScrollDelay, minValue: 0.01, maxValue: 200.0, target: self, action: #selector(minDelaySliderChanged(_:)))
-            minDelaySlider.frame = NSRect(x: 180, y: 100, width: 200, height: 25)
+            minDelaySlider.frame = NSRect(x: 180, y: 180, width: 200, height: 25)
             minDelaySlider.numberOfTickMarks = 20
             contentView.addSubview(minDelaySlider)
             
-            maxDelayTextField = NSTextField(frame: NSRect(x: 400, y: 145, width: 50, height: 20))
+            maxDelayTextField = NSTextField(frame: NSRect(x: 400, y: 225, width: 50, height: 20))
             maxDelayTextField.stringValue = String(format: "%.2f", self.configuration.maxScrollDelay)
             maxDelayTextField.alignment = .center
             maxDelayTextField.delegate = self
             contentView.addSubview(maxDelayTextField)
             
-            minDelayTextField = NSTextField(frame: NSRect(x: 400, y: 105, width: 50, height: 20))
+            minDelayTextField = NSTextField(frame: NSRect(x: 400, y: 185, width: 50, height: 20))
             minDelayTextField.stringValue = String(format: "%.2f", self.configuration.minScrollDelay)
             minDelayTextField.alignment = .center
             minDelayTextField.delegate = self
             contentView.addSubview(minDelayTextField)
             
             let deadZoneRadiusLabel = NSTextField(labelWithString: "Dead zone radius:")
-            deadZoneRadiusLabel.frame = NSRect(x: 20, y: 65, width: 150, height: 20)
+            deadZoneRadiusLabel.frame = NSRect(x: 20, y: 145, width: 150, height: 20)
             contentView.addSubview(deadZoneRadiusLabel)
             
             deadZoneRadiusSlider = NSSlider(value: self.configuration.deadZoneRadius, minValue: 1, maxValue: 50, target: self, action: #selector(maxDeadZoneRadiusSliderChanged(_:)))
-            deadZoneRadiusSlider.frame = NSRect(x: 180, y: 60, width: 200, height: 25)
+            deadZoneRadiusSlider.frame = NSRect(x: 180, y: 140, width: 200, height: 25)
             deadZoneRadiusSlider.numberOfTickMarks = 20
             contentView.addSubview(deadZoneRadiusSlider)
             
-            deadZoneRadiusTextField = NSTextField(frame: NSRect(x: 400, y: 65, width: 50, height: 20))
+            deadZoneRadiusTextField = NSTextField(frame: NSRect(x: 400, y: 145, width: 50, height: 20))
             deadZoneRadiusTextField.stringValue = String(format: "%.2f", self.configuration.deadZoneRadius)
             deadZoneRadiusTextField.alignment = .center
             deadZoneRadiusTextField.delegate = self
             contentView.addSubview(deadZoneRadiusTextField)
+            
+            let maxDistancePercentLabel = NSTextField(labelWithString: "Distance for max. speed:")
+            maxDistancePercentLabel.frame = NSRect(x: 20, y: 105, width: 150, height: 20)
+            contentView.addSubview(maxDistancePercentLabel)
+            
+            maxDistancePercentSlider = NSSlider(value: self.configuration.maxDistancePercent, minValue: 1, maxValue: 100, target: self, action: #selector(maxDistancePercentSliderChanged(_:)))
+            maxDistancePercentSlider.frame = NSRect(x: 180, y: 100, width: 200, height: 25)
+            maxDistancePercentSlider.numberOfTickMarks = 20
+            contentView.addSubview(maxDistancePercentSlider)
+            
+            maxDistancePercentTextField = NSTextField(frame: NSRect(x: 400, y: 105, width: 50, height: 20))
+            maxDistancePercentTextField.stringValue = String(format: "%.2f", self.configuration.maxDistancePercent)
+            maxDistancePercentTextField.alignment = .center
+            maxDistancePercentTextField.delegate = self
+            contentView.addSubview(maxDistancePercentTextField)
             
             window.contentView = contentView
             preferencesWindow = window
@@ -125,6 +140,15 @@ class Menu : NSObject {
     @objc func maxDeadZoneRadiusSliderChanged(_ sender: NSSlider) {
         self.configuration.deadZoneRadius = sender.doubleValue
         updateDeadZoneTextField()
+    }
+    
+    @objc func maxDistancePercentSliderChanged(_ sender: NSSlider) {
+        self.configuration.maxDistancePercent = sender.doubleValue
+        updateMaxDistancePercentTextField()
+    }
+    
+    func updateMaxDistancePercentTextField() {
+        maxDistancePercentTextField.stringValue = String(format: "%.2f", self.configuration.maxDistancePercent)
     }
     
     func updateDeadZoneTextField() {
@@ -184,6 +208,26 @@ class Menu : NSObject {
             sender.stringValue = String(format: "%.2f", self.configuration.deadZoneRadius)
         }
     }
+    
+    @objc func maxDistancePercentTextFieldChanged(_ sender: NSTextField) {
+        if let value = Double(sender.stringValue) {
+            if (value > maxDistancePercentSlider.maxValue) {
+                self.configuration.maxDistancePercent = maxDistancePercentSlider.maxValue
+                sender.stringValue = String(format: "%.2f", self.configuration.maxDistancePercent)
+            }
+            else if (value < maxDistancePercentSlider.minValue) {
+                self.configuration.maxDistancePercent = maxDistancePercentSlider.minValue
+                sender.stringValue = String(format: "%.2f", self.configuration.maxDistancePercent)
+            }
+            else {
+                self.configuration.maxDistancePercent = value
+            }
+            self.maxDistancePercentSlider.doubleValue = self.configuration.maxDistancePercent
+        }
+        else {
+            sender.stringValue = String(format: "%.2f", self.configuration.maxDistancePercent)
+        }
+    }
 }
 
 extension Menu: NSTextFieldDelegate {
@@ -198,6 +242,8 @@ extension Menu: NSTextFieldDelegate {
             minDelayTextFieldChanged(textField)
         } else if textField === deadZoneRadiusTextField {
             deadZoneRadiusTextFieldChanged(textField)
+        } else if textField === maxDistancePercentTextField {
+            maxDistancePercentTextFieldChanged(textField)
         }
     }
 }

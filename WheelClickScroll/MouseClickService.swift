@@ -72,7 +72,7 @@ class MouseClickService: NSObject {
         if (self.currentScreenHeight == nil) {
             return
         }
-        let maxPixelDistance = self.currentScreenHeight! / self.configuration.maxPixelDistanceFactor
+        let maxPixelDistance = self.currentScreenHeight! * self.configuration.maxDistancePercent / 100
         var pixelRatio: CGFloat = abs(deltaY) / maxPixelDistance
         if (pixelRatio > 1) {
             pixelRatio = 1
