@@ -36,7 +36,13 @@ Set the WheelClickScroll application to start automatically when you logs in by 
 
 ## Customization
 
-WheelClickScroll provides various settings that can be customized through the menulet available in the top bar. You can adjust these settings according to your preferences to enhance your scrolling experience.
+WheelClickScroll provides various settings that can be customized through the menulet available in the top bar (search for the sign: ↕ - double arrow up/down). You can adjust these settings according to your preferences to enhance your scrolling experience.
+
+![Menulet Icon](images/menulet-icon.png?raw=true "Menulet Icon")
+
+![Menulet Menu](images/menulet-menu.png?raw=true "Menulet Menu")
+
+![Preferences](images/preferences.png?raw=true "Preferences")
 
 ## Troubleshooting
 
