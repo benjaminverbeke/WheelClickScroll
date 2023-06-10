@@ -17,12 +17,14 @@ class Menu : NSObject {
     var maxDistancePercentSlider: NSSlider!
     var reverseScrollingCheckBox: NSButton!
     
+    let statusItemAttribute = [ NSAttributedString.Key.font: NSFont(name: "Arial", size: 15)]
+    let descriptionAttribute = [ NSAttributedString.Key.font: NSFont(name: "Arial", size: 12), NSAttributedString.Key.foregroundColor: NSColor.lightGray]
+    
     override init() {
         super.init()
         if let button = statusItem.button {
-            let myAttribute = [ NSAttributedString.Key.font: NSFont(name: "Arial", size: 15)]
-            let myAttrString = NSAttributedString(string: String(format: "%C", 0x2195), attributes: myAttribute as [NSAttributedString.Key : Any])
-            button.attributedTitle = myAttrString
+            button.attributedTitle = NSAttributedString(string: String(format: "%C", 0x2195),
+                attributes: statusItemAttribute as [NSAttributedString.Key : Any])
             //button.action = #selector(togglePopover(_:))
         }
         
@@ -42,7 +44,7 @@ class Menu : NSObject {
     
     @objc func showPreferences(_ sender: AnyObject?) {
         if preferencesWindow == nil {
-            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 470, height: 300), styleMask: [.titled, .closable], backing: .buffered, defer: false)
+            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 470, height: 450), styleMask: [.titled, .closable], backing: .buffered, defer: false)
             window.center()
             window.title = "Preferences"
             window.isReleasedWhenClosed = false
@@ -50,60 +52,96 @@ class Menu : NSObject {
             let contentView = NSView(frame: window.contentRect(forFrameRect: window.frame))
             
             let maxDelayLabel = NSTextField(labelWithString: "Max. scroll delay:")
-            maxDelayLabel.frame = NSRect(x: 20, y: 225, width: 150, height: 20)
+            maxDelayLabel.frame = NSRect(x: 20, y: 385, width: 150, height: 20)
             contentView.addSubview(maxDelayLabel)
             
+            let maxDelayDescriptionLabel = NSTextField(labelWithAttributedString: NSAttributedString(string: "Maximum delay (seconds) between 2 wheel scrolls. Increase this value to reduce the initial speed when scrolling starts. Default: \(self.configuration.defaultMaxScrollDelay)",
+                attributes: descriptionAttribute as [NSAttributedString.Key : Any]) )
+            
+            maxDelayDescriptionLabel.usesSingleLineMode = false
+            maxDelayDescriptionLabel.cell?.wraps = true
+            maxDelayDescriptionLabel.cell?.isScrollable = false
+            maxDelayDescriptionLabel.frame = NSRect(x: 20, y: 325, width: 400, height: 50)
+            contentView.addSubview(maxDelayDescriptionLabel)
+            
             maxDelaySlider = NSSlider(value: self.configuration.maxScrollDelay, minValue: 0.01, maxValue: 200.0, target: self, action: #selector(maxDelaySliderChanged(_:)))
-            maxDelaySlider.frame = NSRect(x: 180, y: 220, width: 200, height: 25)
+            maxDelaySlider.frame = NSRect(x: 180, y: 380, width: 200, height: 25)
             maxDelaySlider.numberOfTickMarks = 20
             contentView.addSubview(maxDelaySlider)
             
-            let minDelayLabel = NSTextField(labelWithString: "Min. scroll delay:")
-            minDelayLabel.frame = NSRect(x: 20, y: 185, width: 150, height: 20)
-            contentView.addSubview(minDelayLabel)
-            
-            minDelaySlider = NSSlider(value: self.configuration.minScrollDelay, minValue: 0.01, maxValue: 200.0, target: self, action: #selector(minDelaySliderChanged(_:)))
-            minDelaySlider.frame = NSRect(x: 180, y: 180, width: 200, height: 25)
-            minDelaySlider.numberOfTickMarks = 20
-            contentView.addSubview(minDelaySlider)
-            
-            maxDelayTextField = NSTextField(frame: NSRect(x: 400, y: 225, width: 50, height: 20))
+            maxDelayTextField = NSTextField(frame: NSRect(x: 400, y: 385, width: 50, height: 20))
             maxDelayTextField.stringValue = String(format: "%.2f", self.configuration.maxScrollDelay)
             maxDelayTextField.alignment = .center
             maxDelayTextField.delegate = self
             contentView.addSubview(maxDelayTextField)
             
-            minDelayTextField = NSTextField(frame: NSRect(x: 400, y: 185, width: 50, height: 20))
+            let minDelayLabel = NSTextField(labelWithString: "Min. scroll delay:")
+            minDelayLabel.frame = NSRect(x: 20, y: 305, width: 150, height: 20)
+            contentView.addSubview(minDelayLabel)
+            
+            let minDelayDescriptionLabel = NSTextField(labelWithAttributedString: NSAttributedString(string: "Minimum delay (seconds) between 2 wheel scrolls. Increase this value to reduce the maximum reachable scrolling speed. Default: \(self.configuration.defaultMinScrollDelay)",
+                attributes: descriptionAttribute as [NSAttributedString.Key : Any]) )
+            
+            minDelayDescriptionLabel.usesSingleLineMode = false
+            minDelayDescriptionLabel.cell?.wraps = true
+            minDelayDescriptionLabel.cell?.isScrollable = false
+            minDelayDescriptionLabel.frame = NSRect(x: 20, y: 245, width: 400, height: 50)
+            contentView.addSubview(minDelayDescriptionLabel)
+            
+            minDelaySlider = NSSlider(value: self.configuration.minScrollDelay, minValue: 0.01, maxValue: 200.0, target: self, action: #selector(minDelaySliderChanged(_:)))
+            minDelaySlider.frame = NSRect(x: 180, y: 300, width: 200, height: 25)
+            minDelaySlider.numberOfTickMarks = 20
+            contentView.addSubview(minDelaySlider)
+            
+            minDelayTextField = NSTextField(frame: NSRect(x: 400, y: 305, width: 50, height: 20))
             minDelayTextField.stringValue = String(format: "%.2f", self.configuration.minScrollDelay)
             minDelayTextField.alignment = .center
             minDelayTextField.delegate = self
             contentView.addSubview(minDelayTextField)
             
             let deadZoneRadiusLabel = NSTextField(labelWithString: "Dead zone radius:")
-            deadZoneRadiusLabel.frame = NSRect(x: 20, y: 145, width: 150, height: 20)
+            deadZoneRadiusLabel.frame = NSRect(x: 20, y: 225, width: 150, height: 20)
             contentView.addSubview(deadZoneRadiusLabel)
             
+            let deadZoneRadiusDescriptionLabel = NSTextField(labelWithAttributedString: NSAttributedString(string: "Dead zone height (pixels). Increase this value to increase the minimal height before which scrolling is triggered. Default: \(self.configuration.defaultDeadZoneRadius)",
+                attributes: descriptionAttribute as [NSAttributedString.Key : Any]) )
+            
+            deadZoneRadiusDescriptionLabel.usesSingleLineMode = false
+            deadZoneRadiusDescriptionLabel.cell?.wraps = true
+            deadZoneRadiusDescriptionLabel.cell?.isScrollable = false
+            deadZoneRadiusDescriptionLabel.frame = NSRect(x: 20, y: 165, width: 400, height: 50)
+            contentView.addSubview(deadZoneRadiusDescriptionLabel)
+            
             deadZoneRadiusSlider = NSSlider(value: self.configuration.deadZoneRadius, minValue: 1, maxValue: 50, target: self, action: #selector(maxDeadZoneRadiusSliderChanged(_:)))
-            deadZoneRadiusSlider.frame = NSRect(x: 180, y: 140, width: 200, height: 25)
+            deadZoneRadiusSlider.frame = NSRect(x: 180, y: 220, width: 200, height: 25)
             deadZoneRadiusSlider.numberOfTickMarks = 20
             contentView.addSubview(deadZoneRadiusSlider)
             
-            deadZoneRadiusTextField = NSTextField(frame: NSRect(x: 400, y: 145, width: 50, height: 20))
+            deadZoneRadiusTextField = NSTextField(frame: NSRect(x: 400, y: 225, width: 50, height: 20))
             deadZoneRadiusTextField.stringValue = String(format: "%.2f", self.configuration.deadZoneRadius)
             deadZoneRadiusTextField.alignment = .center
             deadZoneRadiusTextField.delegate = self
             contentView.addSubview(deadZoneRadiusTextField)
             
             let maxDistancePercentLabel = NSTextField(labelWithString: "Distance for max. speed:")
-            maxDistancePercentLabel.frame = NSRect(x: 20, y: 105, width: 150, height: 20)
+            maxDistancePercentLabel.frame = NSRect(x: 20, y: 145, width: 150, height: 20)
             contentView.addSubview(maxDistancePercentLabel)
             
+            let maxDistancePercentDescriptionLabel = NSTextField(labelWithAttributedString: NSAttributedString(string: "Distance (% screen height) to reach maximum scrolling speed. Increase this value to smoothen the scrolling acceleration. Default: \(self.configuration.defaultMaxDistancePercent)",
+                attributes: descriptionAttribute as [NSAttributedString.Key : Any]) )
+            
+            maxDistancePercentDescriptionLabel.usesSingleLineMode = false
+            maxDistancePercentDescriptionLabel.cell?.wraps = true
+            maxDistancePercentDescriptionLabel.cell?.isScrollable = false
+            maxDistancePercentDescriptionLabel.frame = NSRect(x: 20, y: 85, width: 400, height: 50)
+            contentView.addSubview(maxDistancePercentDescriptionLabel)
+            
             maxDistancePercentSlider = NSSlider(value: self.configuration.maxDistancePercent, minValue: 1, maxValue: 100, target: self, action: #selector(maxDistancePercentSliderChanged(_:)))
-            maxDistancePercentSlider.frame = NSRect(x: 180, y: 100, width: 200, height: 25)
+            maxDistancePercentSlider.frame = NSRect(x: 180, y: 140, width: 200, height: 25)
             maxDistancePercentSlider.numberOfTickMarks = 20
             contentView.addSubview(maxDistancePercentSlider)
             
-            maxDistancePercentTextField = NSTextField(frame: NSRect(x: 400, y: 105, width: 50, height: 20))
+            maxDistancePercentTextField = NSTextField(frame: NSRect(x: 400, y: 145, width: 50, height: 20))
             maxDistancePercentTextField.stringValue = String(format: "%.2f", self.configuration.maxDistancePercent)
             maxDistancePercentTextField.alignment = .center
             maxDistancePercentTextField.delegate = self
@@ -114,6 +152,15 @@ class Menu : NSObject {
             reverseScrollingCheckBox.setButtonType(NSButton.ButtonType.switch)
             reverseScrollingCheckBox.frame = NSRect(x: 20, y: 65, width: 150, height: 20)
             contentView.addSubview(reverseScrollingCheckBox)
+            
+            let reverseScrollingDescriptionLabel = NSTextField(labelWithAttributedString: NSAttributedString(string: "Reverse the mouse wheel scrolling direction. Default: \(self.configuration.defaultReverseScrolling ? "enabled" : "disabled")",
+                attributes: descriptionAttribute as [NSAttributedString.Key : Any]) )
+            
+            reverseScrollingDescriptionLabel.usesSingleLineMode = false
+            reverseScrollingDescriptionLabel.cell?.wraps = true
+            reverseScrollingDescriptionLabel.cell?.isScrollable = false
+            reverseScrollingDescriptionLabel.frame = NSRect(x: 20, y: 5, width: 400, height: 50)
+            contentView.addSubview(reverseScrollingDescriptionLabel)
             
             window.contentView = contentView
             preferencesWindow = window
