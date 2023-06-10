@@ -9,7 +9,7 @@ class Configuration {
     // The bigger the factor the quicker you reach max speed
     let maxPixelDistanceFactor: CGFloat = 5
     
-    var deadZoneRadius: CGFloat = 5
+    var deadZoneRadius: CGFloat = 20
     var isScrollInverted: Bool = UserDefaults.standard.bool(forKey: "com.apple.swipescrolldirection") ? true : false
     
     var maxScrollDelay: Double {
