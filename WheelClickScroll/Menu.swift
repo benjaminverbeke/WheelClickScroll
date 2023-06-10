@@ -8,8 +8,14 @@ class Menu : NSObject {
     
     var maxDelayTextField: NSTextField!
     var minDelayTextField: NSTextField!
+    var deadZoneRadiusTextField: NSTextField!
+    var maxDistancePercentTextField: NSTextField!
+    
     var maxDelaySlider: NSSlider!
     var minDelaySlider: NSSlider!
+    var deadZoneRadiusSlider: NSSlider!
+    var maxDistancePercentSlider: NSSlider!
+    var invertScrollCheckBox: NSButton!
     
     override init() {
         super.init()
@@ -47,18 +53,18 @@ class Menu : NSObject {
             maxDelayLabel.frame = NSRect(x: 20, y: 145, width: 150, height: 20)
             contentView.addSubview(maxDelayLabel)
             
-            maxDelaySlider = NSSlider(value: self.configuration.maxScrollDelay, minValue: 0.01, maxValue: 300.0, target: self, action: #selector(maxDelaySliderChanged(_:)))
+            maxDelaySlider = NSSlider(value: self.configuration.maxScrollDelay, minValue: 0.01, maxValue: 200.0, target: self, action: #selector(maxDelaySliderChanged(_:)))
             maxDelaySlider.frame = NSRect(x: 180, y: 140, width: 200, height: 25)
-            maxDelaySlider.isContinuous = true
+            maxDelaySlider.numberOfTickMarks = 20
             contentView.addSubview(maxDelaySlider)
             
             let minDelayLabel = NSTextField(labelWithString: "Min. scroll delay:")
             minDelayLabel.frame = NSRect(x: 20, y: 105, width: 150, height: 20)
             contentView.addSubview(minDelayLabel)
             
-            minDelaySlider = NSSlider(value: self.configuration.minScrollDelay, minValue: 0.01, maxValue: 300.0, target: self, action: #selector(minDelaySliderChanged(_:)))
+            minDelaySlider = NSSlider(value: self.configuration.minScrollDelay, minValue: 0.01, maxValue: 200.0, target: self, action: #selector(minDelaySliderChanged(_:)))
             minDelaySlider.frame = NSRect(x: 180, y: 100, width: 200, height: 25)
-            minDelaySlider.isContinuous = true
+            minDelaySlider.numberOfTickMarks = 20
             contentView.addSubview(minDelaySlider)
             
             maxDelayTextField = NSTextField(frame: NSRect(x: 400, y: 145, width: 50, height: 20))
@@ -72,6 +78,21 @@ class Menu : NSObject {
             minDelayTextField.alignment = .center
             minDelayTextField.delegate = self
             contentView.addSubview(minDelayTextField)
+            
+            let deadZoneRadiusLabel = NSTextField(labelWithString: "Dead zone radius:")
+            deadZoneRadiusLabel.frame = NSRect(x: 20, y: 65, width: 150, height: 20)
+            contentView.addSubview(deadZoneRadiusLabel)
+            
+            deadZoneRadiusSlider = NSSlider(value: self.configuration.deadZoneRadius, minValue: 1, maxValue: 50, target: self, action: #selector(maxDeadZoneRadiusSliderChanged(_:)))
+            deadZoneRadiusSlider.frame = NSRect(x: 180, y: 60, width: 200, height: 25)
+            deadZoneRadiusSlider.numberOfTickMarks = 20
+            contentView.addSubview(deadZoneRadiusSlider)
+            
+            deadZoneRadiusTextField = NSTextField(frame: NSRect(x: 400, y: 65, width: 50, height: 20))
+            deadZoneRadiusTextField.stringValue = String(format: "%.2f", self.configuration.deadZoneRadius)
+            deadZoneRadiusTextField.alignment = .center
+            deadZoneRadiusTextField.delegate = self
+            contentView.addSubview(deadZoneRadiusTextField)
             
             window.contentView = contentView
             preferencesWindow = window
@@ -99,6 +120,15 @@ class Menu : NSObject {
         }
         sender.doubleValue = self.configuration.minScrollDelay
         updateMinDelayTextField()
+    }
+    
+    @objc func maxDeadZoneRadiusSliderChanged(_ sender: NSSlider) {
+        self.configuration.deadZoneRadius = sender.doubleValue
+        updateDeadZoneTextField()
+    }
+    
+    func updateDeadZoneTextField() {
+        deadZoneRadiusTextField.stringValue = String(format: "%.2f", self.configuration.deadZoneRadius)
     }
     
     func updateMaxDelayTextField() {
@@ -134,6 +164,26 @@ class Menu : NSObject {
             sender.stringValue = String(format: "%.2f", self.configuration.minScrollDelay)
         }
     }
+    
+    @objc func deadZoneRadiusTextFieldChanged(_ sender: NSTextField) {
+        if let value = Double(sender.stringValue) {
+            if (value > deadZoneRadiusSlider.maxValue) {
+                self.configuration.deadZoneRadius = deadZoneRadiusSlider.maxValue
+                sender.stringValue = String(format: "%.2f", self.configuration.deadZoneRadius)
+            }
+            else if (value < deadZoneRadiusSlider.minValue) {
+                self.configuration.deadZoneRadius = deadZoneRadiusSlider.minValue
+                sender.stringValue = String(format: "%.2f", self.configuration.deadZoneRadius)
+            }
+            else {
+                self.configuration.deadZoneRadius = value
+            }
+            self.deadZoneRadiusSlider.doubleValue = self.configuration.deadZoneRadius
+        }
+        else {
+            sender.stringValue = String(format: "%.2f", self.configuration.deadZoneRadius)
+        }
+    }
 }
 
 extension Menu: NSTextFieldDelegate {
@@ -146,6 +196,8 @@ extension Menu: NSTextFieldDelegate {
             maxDelayTextFieldChanged(textField)
         } else if textField === minDelayTextField {
             minDelayTextFieldChanged(textField)
+        } else if textField === deadZoneRadiusTextField {
+            deadZoneRadiusTextFieldChanged(textField)
         }
     }
 }

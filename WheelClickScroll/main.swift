@@ -1,13 +1,13 @@
 import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate {    
-    var mouseClickService: MouseClickService? = nil
+    var mouseClickService: MouseClickService!
     var menu: Menu!
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         menu = Menu()
         mouseClickService = MouseClickService()
-        mouseClickService!.startMonitoring()
+        mouseClickService.startMonitoring()
     }
 }
 
