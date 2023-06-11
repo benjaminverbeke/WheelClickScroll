@@ -1,6 +1,6 @@
 # WheelClickScroll
 
-WheelClickScroll is a macOS application that allows you to scroll through web pages or documents by simply moving your mouse up and down after having pressed the middle mouse button. It emulates the native Windows mouse feature and provides a convenient scrolling experience on macOS.
+WheelClickScroll is a macOS application that replicates the native Windows wheel mouse click feature, enabling scrolling through web pages and documents with vertical mouse movements.
 
 ## Features
 
