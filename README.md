@@ -19,7 +19,12 @@ To install WheelClickScroll, follow these steps:
 
 1. Download the latest release of WheelClickScroll from the [GitHub repository](https://github.com/benjaminverbeke/WheelClickScroll).
 2. Extract the downloaded archive to a convenient location on your macOS system (ex: the "Applications" folder)
-3. Run the WheelClickScroll.app
+3. Hold the Cmd key and right-click on the extracted "WheelClickScroll.app" file
+4. Select "Open" from the context menu
+5. Select "Open" again.
+
+This convoluted way of opening the application is due to the application not being signed.
+After the initial opening, a double-click will suffice to open the application.
 
 ## Usage
 
